@@ -14,7 +14,20 @@ function createWindow() {
     const rpc = new RpcProvider(payload => win.webContents.send('rpc', payload));
     ipcMain.on('rpc', (_: any, payload: any) => rpc.dispatch(payload));
 
-    rpc.registerRpcHandler('hello', (msg?: string) => `hello from the server: ${msg}`);
+    rpc.registerRpcHandler('hello', (options?: { url: string; user: string; password: string }) => {
+        var spawnSync = require('child_process').spawnSync;
+        var result = spawnSync(
+            'docker-ls',
+            ['repositories', '-r', options!.url, '-u', options!.user, '-p', options!.password, '-j'],
+            { encoding: 'utf-8' }
+        );
+
+        if (result.stdout.length > 0) {
+            return JSON.parse(result.stdout);
+        } else {
+            return { error: true };
+        }
+    });
 }
 
 app.on('ready', createWindow);

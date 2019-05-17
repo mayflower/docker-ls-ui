@@ -9,7 +9,19 @@ ipcRenderer.on('rpc', (_: any, payload: any) => rpc.dispatch(payload));
 const App: FunctionComponent = () => (
     <div>
         Hello world!
-        <button onClick={async () => console.log(await rpc.rpc('hello', 'from client'))}>Send</button>
+        <button
+            onClick={async () =>
+                console.log(
+                    await rpc.rpc('hello', {
+                        url: '',
+                        user: '',
+                        password: '',
+                    })
+                )
+            }
+        >
+            Send
+        </button>
     </div>
 );
 
