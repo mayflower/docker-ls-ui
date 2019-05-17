@@ -1,0 +1,28 @@
+{
+    "defaultSeverity": "error",
+    "extends": ["tslint:recommended", "tslint-config-prettier"],
+    "jsRules": {},
+    "rules": {
+        "interface-over-type-literal": false,
+        "object-literal-sort-keys": false,
+        "interface-name": false,
+        "no-switch-case-fall-through": true,
+        "no-invalid-this": true,
+        "triple-equals": true,
+
+        "no-unnecessary-type-assertion": true,
+        "no-floating-promises": true,
+        "no-for-in-array": true,
+        "no-inferred-empty-object-type": true,
+        "no-unbound-method": true,
+        "no-unused-variable": true,
+        "restrict-plus-operands": true,
+        "strict-type-predicates": true,
+        "deprecation": true,
+        "no-boolean-literal-compare": true,
+        "unnecessary-bind": true,
+        "no-use-before-declare": true,
+        "prefer-readonly": true
+    },
+    "rulesDirectory": []
+}
