@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 
 module.exports = {
-    entry: './src/index.tsx',
+    entry: './src/ui/index.tsx',
     mode: 'development',
     devtool: 'inline-source-map',
     devServer: {
@@ -15,11 +15,25 @@ module.exports = {
         contentBase: path.join(__dirname, 'public'),
     },
     output: {
-        filename: './app.js',
+        filename: './dist/app.js',
+    },
+    externals: {
+        electron: 'require("electron")',
     },
     module: {
         rules: [
-            { test: /\.tsx?/, loader: 'ts-loader' },
+            {
+                test: /\.tsx?$/,
+
+                loader: {
+                    loader: 'ts-loader',
+                    options: {
+                        compilerOptions: {
+                            module: 'commonjs',
+                        },
+                    },
+                },
+            },
             {
                 test: /\.css$/,
                 use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
@@ -36,10 +50,11 @@ module.exports = {
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],
+        modules: ['node_modules'],
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: 'Perry UI',
+            title: 'docker-ls',
             template: './public/index.html',
         }),
         new MiniCssExtractPlugin({
