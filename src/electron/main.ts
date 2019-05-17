@@ -9,7 +9,7 @@ function createWindow() {
             nodeIntegration: true,
         },
     });
-    win.loadURL('http://localhost:9000');
+    win.loadURL('http://localhost:9001');
 
     const rpc = new RpcProvider(payload => win.webContents.send('rpc', payload));
     ipcMain.on('rpc', (_: any, payload: any) => rpc.dispatch(payload));
@@ -22,7 +22,7 @@ function createWindow() {
             { encoding: 'utf-8' }
         );
 
-        if (result.stdout.length > 0) {
+        if (result.stdout && result.stdout.length > 0) {
             return JSON.parse(result.stdout);
         } else {
             return { error: true };
