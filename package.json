@@ -2,8 +2,9 @@
   "name": "docker-ls-ui",
   "version": "1.0.0",
   "description": "A desktop version of docker-ls",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
+    "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/mayflower/docker-ls-ui/issues"
   },
-  "homepage": "https://github.com/mayflower/docker-ls-ui#readme"
+  "homepage": "https://github.com/mayflower/docker-ls-ui#readme",
+  "dependencies": {
+    "electron": "^5.0.1"
+  }
 }
