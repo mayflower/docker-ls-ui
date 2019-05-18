@@ -28,6 +28,21 @@ function createWindow() {
             return { error: true };
         }
     });
+
+    rpc.registerRpcHandler('tags', (options?: { url: string; user: string; password: string; repository: string }) => {
+        var spawnSync = require('child_process').spawnSync;
+        var result = spawnSync(
+            'docker-ls',
+            ['tags', '-r', options!.url, '-u', options!.user, '-p', options!.password, '-j', options!.repository],
+            { encoding: 'utf-8' }
+        );
+
+        if (result.stdout && result.stdout.length > 0) {
+            return JSON.parse(result.stdout);
+        } else {
+            return { error: true };
+        }
+    });
 }
 
 app.on('ready', createWindow);

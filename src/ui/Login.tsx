@@ -9,14 +9,15 @@ interface State {
     error?: string;
     submitting?: boolean;
     repositories: any[];
+    tags: any[];
 }
 
-interface ContextValue {
+export interface ContextValue {
     state: State;
     setState(state: State): void;
 }
 
-const LoginContext = React.createContext<ContextValue | null>(null);
+export const LoginContext = React.createContext<ContextValue | null>(null);
 
 export function LoginProvider(props: any) {
     const [state, setState] = React.useState({
@@ -25,6 +26,7 @@ export function LoginProvider(props: any) {
         endpoint: '',
         valid: false,
         repositories: [],
+        tags: [],
     });
 
     const value = React.useMemo(
@@ -63,10 +65,18 @@ export function useLoginState() {
                     valid: true,
                     submitting: false,
                     repositories: result.repositories,
+                    tags: [],
                 });
             })
             .catch(e =>
-                ctx.setState({ ...ctx.state, valid: false, error: String(e), submitting: false, repositories: [] })
+                ctx.setState({
+                    ...ctx.state,
+                    valid: false,
+                    error: String(e),
+                    submitting: false,
+                    repositories: [],
+                    tags: [],
+                })
             );
     }
 
