@@ -6,13 +6,16 @@ import { RpcProvider } from 'worker-rpc';
 import { LoginProvider, useLoginState, LoginContext } from './Login';
 import { LoginForm } from './LoginForm';
 import { RpcContextProvider } from './RpcProvider';
+import { string } from 'prop-types';
 
 const rpc = new RpcProvider(payload => ipcRenderer.send('rpc', payload));
 ipcRenderer.on('rpc', (_: any, payload: any) => rpc.dispatch(payload));
 
 class App extends Component {
     initialState = {
+        repository: '',
         tags: [],
+        tag: null,
     };
 
     state = this.initialState;
@@ -29,9 +32,14 @@ class App extends Component {
                 <RepositorySelection repositories={repositories} selectRepository={this.selectRepository} />
                 <ul>
                     {this.state.tags.map(tag => {
-                        return <li key={tag}>{tag}</li>;
+                        return (
+                            <li key={tag} onClick={() => this.selectTag(tag)}>
+                                {tag}
+                            </li>
+                        );
                     })}
                 </ul>
+                <pre>{JSON.stringify(this.state.tag, undefined, '    ')}</pre>
             </>
         );
     }
@@ -43,7 +51,18 @@ class App extends Component {
             password: this.context!.state.password,
             repository,
         });
-        this.setState({ tags: result.tags });
+        this.setState({ repository, tags: result.tags, tag: null });
+    };
+
+    selectTag = async (tag: string) => {
+        const result: { tag: any } = await rpc.rpc('tag', {
+            url: this.context!.state.endpoint,
+            user: this.context!.state.username,
+            password: this.context!.state.password,
+            repository: this.state.repository,
+            tag,
+        });
+        this.setState({ tag: result });
     };
 
     static contextType = LoginContext;
