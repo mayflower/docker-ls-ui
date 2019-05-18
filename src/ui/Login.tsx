@@ -6,7 +6,7 @@ interface State {
     password: string;
     endpoint: string;
     valid: boolean;
-    error?: string;
+    error: boolean;
     submitting?: boolean;
     repositories: any[];
     tags: any[];
@@ -25,6 +25,7 @@ export function LoginProvider(props: any) {
         password: '',
         endpoint: '',
         valid: false,
+        error: false,
         repositories: [],
         tags: [],
     });
@@ -64,6 +65,7 @@ export function useLoginState() {
                     endpoint,
                     valid: true,
                     submitting: false,
+                    error: false,
                     repositories: result.repositories,
                     tags: [],
                 });
@@ -72,7 +74,7 @@ export function useLoginState() {
                 ctx.setState({
                     ...ctx.state,
                     valid: false,
-                    error: String(e),
+                    error: true,
                     submitting: false,
                     repositories: [],
                     tags: [],

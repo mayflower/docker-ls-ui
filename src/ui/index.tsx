@@ -6,7 +6,8 @@ import { RpcProvider } from 'worker-rpc';
 import { LoginProvider, useLoginState, LoginContext } from './Login';
 import { LoginForm } from './LoginForm';
 import { RpcContextProvider } from './RpcProvider';
-import { string } from 'prop-types';
+
+import 'semantic-ui-css/semantic.min.css';
 
 const rpc = new RpcProvider(payload => ipcRenderer.send('rpc', payload));
 ipcRenderer.on('rpc', (_: any, payload: any) => rpc.dispatch(payload));
