@@ -3,11 +3,12 @@ import React, { Component } from 'react';
 import { render } from 'react-dom';
 import { RpcProvider } from 'worker-rpc';
 
-import { LoginProvider, useLoginState, LoginContext } from './Login';
+import { LoginProvider, LoginContext } from './Login';
 import { LoginForm } from './LoginForm';
 import { RpcContextProvider } from './RpcProvider';
 
 import 'semantic-ui-css/semantic.min.css';
+import { Container, Dropdown, Form } from 'semantic-ui-react';
 
 const rpc = new RpcProvider(payload => ipcRenderer.send('rpc', payload));
 ipcRenderer.on('rpc', (_: any, payload: any) => rpc.dispatch(payload));
@@ -29,19 +30,24 @@ class App extends Component {
         }
 
         return (
-            <>
-                <RepositorySelection repositories={repositories} selectRepository={this.selectRepository} />
-                <ul>
-                    {this.state.tags.map(tag => {
-                        return (
-                            <li key={tag} onClick={() => this.selectTag(tag)}>
-                                {tag}
-                            </li>
-                        );
-                    })}
-                </ul>
-                <pre>{JSON.stringify(this.state.tag, undefined, '    ')}</pre>
-            </>
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
+                <div style={{ padding: '20px' }}>
+                    <RepositorySelection repositories={repositories} selectRepository={this.selectRepository} />
+                </div>
+                <div style={{ flexGrow: 1, overflowY: 'scroll' }}>
+                    <ul>
+                        {this.state.tags &&
+                            this.state.tags.map(tag => {
+                                return (
+                                    <li key={tag} onClick={() => this.selectTag(tag)}>
+                                        {tag}
+                                    </li>
+                                );
+                            })}
+                    </ul>
+                    <pre>{JSON.stringify(this.state.tag, undefined, '    ')}</pre>
+                </div>
+            </div>
         );
     }
 
@@ -80,6 +86,33 @@ function RepositorySelection({
     selectRepository: Function;
 }) {
     return (
+        <Container>
+            <Form>
+                <Form.Field>
+                    <label>Repository</label>
+
+                    <Dropdown
+                        id="repositoryselect"
+                        placeholder="Select repository"
+                        fluid
+                        search
+                        selection
+                        options={repositories.map(repository => {
+                            return {
+                                key: repository,
+                                value: repository,
+                                text: repository,
+                            };
+                        })}
+                        onChange={(_, data) => {
+                            return selectRepository(data.value);
+                        }}
+                    />
+                </Form.Field>
+            </Form>
+        </Container>
+
+        /*
         <ul>
             {repositories.map(repository => {
                 return (
@@ -88,7 +121,7 @@ function RepositorySelection({
                     </li>
                 );
             })}
-        </ul>
+        </ul>*/
     );
 }
 
