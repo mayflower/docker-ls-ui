@@ -11,7 +11,7 @@ const rpc = new RpcProvider(payload => ipcRenderer.send('rpc', payload));
 ipcRenderer.on('rpc', (_: any, payload: any) => rpc.dispatch(payload));
 
 const App: FunctionComponent = () => {
-    const { valid, error, submitting } = useLoginState();
+    const { valid, error, submitting, repositories } = useLoginState();
 
     if (!valid) {
         return <LoginForm submitting={submitting} error={error} />;
@@ -19,22 +19,11 @@ const App: FunctionComponent = () => {
 
     return (
         <div>
-            Hello world!
-            <button
-                onClick={
-                    async () => 0
-                    /*console.log(
-                    await rpc.rpc('hello', {
-                        url: '',
-                        user: '',
-                        password: '',
-                    })
-                )
-                */
-                }
-            >
-                Send
-            </button>
+            <ul>
+                {repositories.map(function(repository) {
+                    return <li key={repository}>{repository}</li>;
+                })}
+            </ul>
         </div>
     );
 };

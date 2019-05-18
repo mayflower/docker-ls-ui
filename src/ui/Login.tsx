@@ -8,6 +8,7 @@ interface State {
     valid: boolean;
     error?: string;
     submitting?: boolean;
+    repositories: any[];
 }
 
 interface ContextValue {
@@ -23,6 +24,7 @@ export function LoginProvider(props: any) {
         password: '',
         endpoint: '',
         valid: false,
+        repositories: [],
     });
 
     const value = React.useMemo(
@@ -48,7 +50,7 @@ export function useLoginState() {
     async function login(username: string, password: string, endpoint: string) {
         ctx.setState({ ...ctx.state, submitting: true });
         // async call to console login / any other form of validation
-        rpc.rpc<any, { error: any }>('hello', { url: endpoint, user: username, password })
+        rpc.rpc<any, { error: any; repositories: any[] }>('hello', { url: endpoint, user: username, password })
             .then(result => {
                 if (result.error) {
                     throw new Error(result.error);
@@ -60,9 +62,12 @@ export function useLoginState() {
                     endpoint,
                     valid: true,
                     submitting: false,
+                    repositories: result.repositories,
                 });
             })
-            .catch(e => ctx.setState({ ...ctx.state, valid: false, error: String(e), submitting: false }));
+            .catch(e =>
+                ctx.setState({ ...ctx.state, valid: false, error: String(e), submitting: false, repositories: [] })
+            );
     }
 
     return {
